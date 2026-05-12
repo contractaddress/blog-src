@@ -1,0 +1,32 @@
+<!-- src/components/TopBar.astro -->
+---
+---
+<nav class="topbar">
+  <a href="/">Home</a>
+  <a href="/blog">Blog</a>
+  <a href="/about">About</a>
+</nav>
+
+<style>
+  .topbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding: 0.7rem 2rem;
+    border-bottom: 1px solid #222;
+    background-color: #0D0D0DFF;
+  }
+
+  .topbar a {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .topbar a:hover {
+    color: var(--accent);
+  }
+</style>
