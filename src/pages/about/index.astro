@@ -19,63 +19,76 @@ import TopBar from '../../components/TopBar.astro';
       <header class='blog-header'>
         <h1 class="page-title">About</h1>
       </header>
-      <div class='card'>
-        <div class='quote-cards'>
-          <div class='quote-card-content'>
-            <h3 class='card-title'>This is a test for layout</h3>
-            <p class='quote'>This is a description?</p>
-          </div>
-        </div>
-      </div>
-      <div class='card'>
-        <div class='quote-cards'>
-          <div class='quote-card-content'>
-            <h3 class='card-title'>This Page is a work in progress</h3>
-            <p class='quote'>nothing to see here, head back home :)</p>
-          </div>
-        </div>
-      </div>
+    <div class='content-row'>
+      <img src='/about-logo.png' class='about-image' />
+      <p class='about-text'>In the beginning, there was only wind.
+      The earliest accounts of the <span style="color: var(--accent)">fenghuang</span> appear in the Shanhaijing — the Classic of Mountains and Seas — a text so old its authorship is attributed to myth itself. There, the bird is described not as a creature of flesh, but as a constellation of virtues given form: the head of heaven, the eyes of the sun, the back of the moon.
+      But the fenghuang was never meant to be seen. Its appearance, the scholars wrote, was a sign that the realm was in harmony — that the ruler was just, the harvest plentiful, the people at peace.
+      To see the <span style="color: var(--accent)">fenghuang</span> was to know, for a fleeting moment, that the world was as it should be.
+    </p>
+    </div>
     </div>
   </body>
 </html>
 
 <style is:global>
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
   .page2-layout {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     max-width: 1200px;
     margin: 0 auto;
     padding: 3rem 2rem;
+    width: 100%;
   }
-
-  .card {
-    display: flex;
-    flex-direction: column;
+  .blog-header {
+    text-align: center;
+    margin-bottom: 3rem;
   }
-
-  .quote-card-content {
-    flex: 0 0 65%;
+  .content-row {
+    flex: 1;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-
+    gap: 3rem;
+    animation: fadeIn 2.5s ease forwards;
   }
-
-  .quote-cards {
-    display: flex;
-    align-items: stretch;
-    gap: 2rem;
-    padding: 1.5rem 0;
-    border-bottom: 3px solid #222;
-    text-decoration: none;
-    position: relative;
+  .about-image {
+    width: 45%;
+    object-fit: cover;
+    padding-right: 1.5rem;
   }
-
-  .card-title {
-    padding-bottom: 10px;
+  .about-text {
+    width: 40%;
+    font-size: 16px;
+    padding-left: 1.5rem;
   }
-  .quote {
-    font-size: 0.85rem;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(0px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (max-width: 768px) {
+    .content-row {
+      flex-direction: column;
+    }
+    .about-image {
+      width: 100%;
+      padding-right: 0;
+    }
+    .about-text {
+      width: 100%;
+      padding-left: 0;
+    }
   }
 </style>
