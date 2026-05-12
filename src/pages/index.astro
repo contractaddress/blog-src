@@ -45,7 +45,7 @@ const asciiArt = fs.readFileSync('public/fenghuang.txt', 'utf-8');
     color: var(--accent);
     text-align: center;
     white-space: pre;
-    margin-bottom: 3rem;
+    margin-bottom: 5rem;
     opacity: 0;
     animation: fadeIn 1.2s ease 0.2s forwards;
   }
@@ -81,6 +81,12 @@ const asciiArt = fs.readFileSync('public/fenghuang.txt', 'utf-8');
 
   .github-link:hover {
     color: #e8e8e8;
+  }
+
+  @media (max-width: 480px) {
+    .ascii {
+      font-size: clamp(0.22rem, 2.5vw, 0.27rem);
+    }
   }
 
   @keyframes fadeIn {
