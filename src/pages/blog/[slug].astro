@@ -1,6 +1,7 @@
 ---
 import '../../styles/global.css';
 import { getCollection, render } from 'astro:content';
+import TopBar from '../../components/TopBar.astro'
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -24,6 +25,7 @@ const { Content } = await render(post);
     <title>{post.data.title} — Fenghuang</title>
   </head>
   <body>
+    <TopBar />
     <article class="post-layout">
       <nav class="post-nav">
         <a href="/blog" class="back-link">← writings</a>
