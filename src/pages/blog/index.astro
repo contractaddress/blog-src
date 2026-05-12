@@ -1,5 +1,6 @@
 ---
 import '../../styles/global.css';
+import '../../styles/elements.css';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog');
@@ -17,7 +18,7 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
     <title>Writings — Fenghuang</title>
   </head>
   <body>
-    <div class="blog-layout">
+    <div class="page-layout">
       <header class="blog-header">
         <a href="/" class="back-link">← home</a>
         <h1 class="page-title">writings</h1>
@@ -66,32 +67,6 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
     max-width: 900px;
     margin: 0 auto;
     padding: 3rem 2rem;
-  }
-
-  .blog-header {
-    margin-bottom: 3rem;
-  }
-
-  .back-link {
-    display: inline-block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-    transition: color 0.2s ease;
-  }
-
-  .back-link:hover {
-    color: var(--accent);
-  }
-
-  .page-title {
-    font-size: 0.8rem;
-    font-weight: normal;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--muted);
   }
 
   .posts {
