@@ -8,7 +8,14 @@
   --font: 'Mononoki Nerd Font', monospace;
 }
 
-*, *::before, *::after {
+.small-text {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;

@@ -7,31 +7,51 @@ draft: false
 ---
 
 ![blog thumb](/blog-thumbs/verayubi-blog.png)
+Hey! welcome to my first blog post, today i'll walk you through using a yubikey with veracrypt to add an extra layer of security to your containers
 
-required packages:
+## How it works
+We program the yubikey slot2 with the `ykman` CLI tool to use the challenge-response method and store a 20byte key.
+
+the yubi slot will take a string (challenge) as input -> run `HMAC-SHA1` with the challenge & key -> returns a response we place in a tempory file in ram `(/dev/shm/)`
+
+this becomes the keyfile for the container, so the challenge must always be the same (and does not need to be kept secret). We use it to create/mount containers and delete the file afterwards
+
+so naturally the easiest way to manage all this, is with a script.
+
+![graph](/blog_img/verayubi-graph.png)
+
+---
+## required packages:
 
 ```bash
 sudo pacman -S yubikey-personalization yubikey-manager veracrypt
 ```
+#
+## program slot 2 with challenge response:
 
-program slot 2 with challenge response:
 ```bash
 ykman otp chalresp --touch 2
 ```
-(backup the secret, if you ever lose your yubikey you can reprogram slot2)
+<p class='small-text' style={{color: 'var(--muted)'}}>(backup the private key, if you ever lose your yubikey you can reprogram slot2 with it)</p>
 
+Now your slot is ready for use! you can grab my script at the very end of the page or follow the next steps for a manual setup
 
-derive temporary keyfile from the yubikey to RAM: (touch when it blinks)
+<h1 style={{
+    textDecoration: 'underline dashed',
+    color: 'var(--accent)'
+}}>Manual Setup</h1>
+derive temporary keyfile from the yubikey to ram: (touch when it blinks)
 ```bash
 ykchalresp -2 "my-veracrypt-challenge" > /dev/shm/vc-keyfile
 ```
 
-create the container
+## create the container
+<p class='small-text'>change to desired encryption, filetype ect</p>
 ```bash
 veracrypt --text --create ~/tutorial_container \
   --size=3G \
   --keyfiles="/dev/shm/vc-keyfile" \
-  --encryption=AES \
+  --encryption=AES-Twofish \ 
   --hash=SHA-512 \
   --filesystem=ext4 \
   --volume-type=normal \
@@ -44,39 +64,36 @@ shred the file after making the container
 shred -u /dev/shm/vc-keyfile
 ```
 
-### Create the mount/unmount script:
+## Create an mount/unmount script:
 
-```bash
-nvim ~/verayubi_mount.sh && chmod +x ~/verayubi_mount.sh
-```
+`verayubi_mount.sh`
 
 ```bash
 #!/bin/bash
 set -e
 
 CHALLENGE="my-veracrypt-challenge"
-CONTAINER="$HOME/tutorial_container" #change to appropriate container name
-MOUNTPOINT="/mnt/private"
+CONTAINER="$HOME/tutorial_container" #change to appropriate container name/location
+MOUNTPOINT="/run/media/$USER/priv"
 KEYFILE=$(mktemp -p /dev/shm)
 
 echo "Touch your YubiKey..."
 
-# Derive keyfile from YubiKey (requires physical touch)
+#Derive keyfile from YubiKey (requires physical touch)
 ykchalresp -2 "$CHALLENGE" > "$KEYFILE"
 
-# Mount — will prompt for passphrase
+#Mount — will prompt for passphrase
 veracrypt --text --keyfiles="$KEYFILE" --protect-hidden=no "$CONTAINER" "$MOUNTPOINT"
 
-# Wipe keyfile from RAM immediately
+#Wipe keyfile from RAM immediately
 shred -u "$KEYFILE"
 
 echo "Mounted at $MOUNTPOINT"
 ```
 
 unmount script:
-```bash
-nvim ~/umount_verayubi.sh && chmod +x ~/umount_verayubi.sh
-```
+
+`verayubi_unmount.sh`
 
 ```bash
 #!/bin/bash
@@ -97,15 +114,96 @@ Mounted at /mnt/private
 ~ [⏱ 11s]
 ❯ ls /mnt/private
 lost+found
+
+❯ ./verayubi_unmount.sh 
+Unmounted !
 ```
+---
+
+<details>
+<summary style={{ 
+  color: 'var(--accent)', 
+  textDecoration: 'underline dashed',
+  textUnderlineOffset: '6px',
+  marginBottom: '10px'
+}}>Here is a script to create/mount/unmount yubi+vera containers</summary>
+
+<p style={{fontSize: '14px'}}>script does not program slot2 with the chalresp token, you need to provide it yourself</p>
+```bash
+#!/bin/bash
+set -e
+
+# Config
+CHALLENGE="my-veracrypt-challenge"
+MOUNTPOINT="/run/media/$USER/priv"
+CONT_DIR=$HOME/.local/share/verayubi
+
+if [ ! -d "$CONT_DIR" ]; then
+    mkdir -p $CONT_DIR
+fi
+
+create() {
+    read -p "Container Name: " CONT_NAME 
+    read -p "Size (format: 2K, 2M, 2G): " CONT_SIZE 
+
+    echo "Touch your Yubikey..."
+
+    # Derive keyfile from YubiKey 
+    ykchalresp -2 "$CHALLENGE" > /dev/shm/vc-keyfile
+
+    veracrypt --text --create $CONT_DIR/$CONT_NAME \
+      --size=$CONT_SIZE \
+      --keyfiles="/dev/shm/vc-keyfile" \
+      --encryption=AES-Twofish \
+      --hash=SHA-512 \
+      --filesystem=ext4 \
+      --volume-type=normal \
+      --random-source=/dev/urandom
+
+    trap 'shred -u /dev/shm/vc-keyfile 2>/dev/null' EXIT
+}
+
+mount_vol() {
+    select CONTAINER in "$CONT_DIR"/*; do
+        break
+    done
+
+    MOUNTPOINT="/run/media/$USER/priv"
+    KEYFILE=$(mktemp -p /dev/shm)
+
+    if [ ! -d "$MOUNTPOINT" ]; then
+        sudo mkdir -p "$MOUNTPOINT"
+    fi
+
+    echo "Touch your YubiKey..."
+
+    # Derive keyfile from YubiKey
+    ykchalresp -2 "$CHALLENGE" > "$KEYFILE"
+
+    veracrypt --text --keyfiles="$KEYFILE" --protect-hidden=no "$CONTAINER" "$MOUNTPOINT"
+
+    trap 'shred -u "$KEYFILE" 2>/dev/null' EXIT
+
+    echo "Mounted at $MOUNTPOINT"
+    #nautilus -w $MOUNTPOINT or whatever file manager u use
+}
+
+unmount_vol() {
+    veracrypt --text -d $MOUNTPOINT
+    echo "Unmounted"
+}
+
+list() {
+    ls $CONT_DIR
+}
 
 
-
-hopefully this [[guide]]/[[tutorial]] was useful 
-
-<details open>
-  <summary style={{ color: 'var(--accent)' }}>Here is a full script to manage everything</summary>
-
-  ```bash
-  ```
+case "$1" in
+    create)   create ;;
+    mount)    mount_vol ;;
+    unmount)  unmount_vol ;;
+    list)     list ;;
+    *)        echo "Usage: verayubi {create|mount|unmount|list}" ;;
+esac
+```
 </details>
