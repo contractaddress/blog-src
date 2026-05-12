@@ -1,0 +1,207 @@
+---
+import '../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.filter(p => !p.data.draft).map(post => ({
+    params: { slug: post.id.replace(/\.(md|mdx)$/, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{post.data.title} — Fenghuang</title>
+  </head>
+  <body>
+    <article class="post-layout">
+      <nav class="post-nav">
+        <a href="/blog" class="back-link">← writings</a>
+      </nav>
+
+      <header class="post-header">
+        <h1 class="post-title">{post.data.title}</h1>
+        <time class="post-date" datetime={post.data.date.toISOString()}>
+          {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </header>
+
+      <div class="post-body">
+        <Content />
+      </div>
+    </article>
+  </body>
+</html>
+
+<style is:global>
+  .post-layout {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .post-nav {
+    margin-bottom: 2.5rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .cover-image {
+    width: 100%;
+    border: 1px solid #222;
+    margin-bottom: 2.5rem;
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .post-title {
+    font-size: 1.75rem;
+    font-weight: normal;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: var(--font);
+  }
+
+  .post-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #c8c8c8;
+  }
+
+  .post-body h2 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: var(--text);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--accent);
+  }
+
+  .post-body h3 {
+    font-size: 1.05rem;
+    font-weight: normal;
+    color: var(--text);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-body p {
+    margin-bottom: 1.25rem;
+  }
+
+  .post-body a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .post-body a:hover {
+    text-decoration: underline;
+  }
+
+  .post-body hr {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 2.5rem 0;
+  }
+
+  .post-body blockquote {
+    border-left: 3px solid #333;
+    margin: 1.5rem 0;
+    padding: 0.5rem 0 0.5rem 1.25rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .post-body blockquote p {
+    margin-bottom: 0;
+  }
+
+  .post-body code {
+    color: var(--accent);
+    background: var(--surface);
+    padding: 0.15rem 0.35rem;
+    font-family: var(--font);
+    font-size: 0.9em;
+  }
+
+  .post-body pre {
+    background: #111;
+    /* border-gradient experiment:
+    border: 1px solid transparent;
+    border-image: linear-gradient(270deg, #DAC592FF, #D7992187) 1;
+    */
+    border: 1px solid #222;
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    font-family: var(--font);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  .post-body pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+
+  .post-body img {
+    width: 100%;
+    border: 1px solid #222;
+    margin: 1.5rem 0;
+  }
+
+  .post-body ul, .post-body ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .post-body li {
+    margin-bottom: 0.4rem;
+  }
+
+  .post-body strong {
+    color: var(--text);
+  }
+
+  @media (max-width: 768px) {
+    .post-layout {
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    .post-title {
+      font-size: 1.35rem;
+    }
+  }
+</style>

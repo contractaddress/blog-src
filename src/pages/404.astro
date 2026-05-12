@@ -1,0 +1,43 @@
+---
+import '../styles/global.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>404 — Fenghuang</title>
+  </head>
+  <body>
+    <main class="not-found">
+      <a href="/" class="back-link">← home</a>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 3rem 2rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+</style>
