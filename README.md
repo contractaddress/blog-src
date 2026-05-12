@@ -1,43 +1,59 @@
-# Astro Starter Kit: Minimal
+# Source code for my blog                                                                                               
 
-```sh
-bun create astro@latest -- --template minimal
-```
+## stack
+- astro (framework)
+- bun
+- html/css 
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+                                                                            ♥M<<*☺             
+                                              .=. .                I  #><>>>>i111itt~█l.       
+                                             W> ,<            <█@@░>>>><▓ .>>>&;11ii~<<.       
+                                          I| II<.  W      .$. &☻☺♥☻█▒▓@@@..<>><>>><@>%|i<@   . 
+                                       ~.l: +tttI1        @.<<.@@@@@♦+   ,♥<>>#<+1ii☺>▓.       
+                                      .*♦♣.               $ <<░%@@@@@@@* .♥#=ii<>>>*>>i<=      
+                                    ♠▓$W◘@@@@.           .$.%☻▓%█▒&%@@@@♦.♦<<>>1ii1>>.. I$     
+                                   •..1%$█=%!M█!:        .@▒>%@.....  .%>1ii1*>W .  M<         
+                       Il                █t█I!☺t        .$ ░@@██░☻☻☻Mi  >W>>>!it>     W        
+                  |@@#.  .;@.            ░==@█=t♠      ▓▓.$@@;t&@%@@▒.+1ii!<░ .=>>             
+                 ##.♠$@@█&=$%>          lWW&>&1>..t•@$ ♥@@@*☻@@@@@@I <W>>>>l~<                 
+          .<><<<t.@@$█.☺%$$█▓.@.        1$%M♣1$,♥@M&▒@M@@l.%%%%&█$▒<><<i1>  ▓@.                
+         @>>>&.!@@▓.$$@W,▒█$$.% %I    .$$♦@$t$@$▓: ,~@ t> *==<~.!><1i>=█<i<  ,                 
+      .<>1iW  . ♦.@@▒:$@@♣=▒.@$%@.@M▒!%▓@@@@@@@@l☺..=.░~.  .t▓$>ii<▓>+<l .<  .                 
+     .>1*>>i=<>.█☺ .$@♥.$@@.:▒l@.@,%.@♠,@@@@@@@@$,@█=i#=<>t░>Mi<$>1> .<% .                     
+     <☻<<i▒>=it><; ..,@@;.@@ ☺@t█▓#&.%.i,@@@@@@@@#@&M=<Mi<><<@>t>.<>  #.                       
+   $I ><i<<i1<<tI#<...&~▓I.█@%.&@.@ @.i1#>@@@@@@@@#&i!I<%<t.&& .<. .                           
+      <t<>*ii><>~1<>#M<>.  >,%.,..l I*>▓>i<$@@@@@@@;@%t=~.t  &  .                              
+     <<>&>ii><<1i>>~i>*<;>>>░<<>><><>i<i*i<<* @@@@@@@><@t○.....                                
+    .>l.##=>.>+<♥.>1> W$i>@iW#▓i<>t>>|>1><<.>.  ♦@+$@I☻.%@@:..                                 
+        #< . <I. .$M   <> ▓I&,@>.<< >< >1 >,    .☺... .&██I$i,@☺@@♥,.                          
+        *   .>.  ..▒I  $> .%#.><..>..< .+;    ▒<%....  @.$>t☻@$▓      ▒%                       
+              .         .▓.  ...█.  .        ,|,    .* ▒.<t♠II@@;$☺     .█                     
+                    ...                      ▓      lM█▒ @•t☻|t@@♥.▓%     ▓!                   
+                                                   #.@ @.█.~$tt1@@@,.░█  ,11%&                 
+                                                    .&,@ $.&▓.$t=☺@@▓  $  @@░%                 
+                                     ,,             ..@ ☺t.&M  $t@. %% .@ .@i@                 
+                                  Mt%█t=♠☻.         █@• @|.☻░. ▒tl♥  .% l○  ☻                  
+                                 .1|$@@█.        .@@@░ @t.☻t%< <♣t@$   >.$                     
+                                ▓.    .       ▓@$$@@, %!t @t@▒ %@t@▓@. i ▓                     
+                               @.               ☺@;..@Wt $t@@▒.$@t@@ @:  ♦.                    
+                            ~☺♣$I.  .        $@&... $tt|<☻t.I @@@t@@  t░█&                     
+                    •ii~!     ♣.        @♥~      .@@tt♠.@t█ .,@$$t$@♣  ;•%.                    
+                   @%██1       ;.     %         ▒@!t%@ %☺W.  %@@@t@@█   % .                    
+                  @▓%☻.        .░     ▒☻;%   .@@!t☺@ |&;t@  ☺>,@!▒@@♣  @. .<                   
+                 .%..       1•    &,     .♥█@%tt@@░.░☺.♦&@  $@@$t$$1  @ .1  1t,                
+                           >  •      ☺%|=@@tt♣@@@. $..$t@@.♦@@@l%@@, %   .| @ttt               
+                          ti .. @$█t░@@▒tt@@@@#..W@. @@t@@;@@@▓<@@@ ♥.  : .% ░@@;              
+                           .☻@@&t@@@░t>@@@@  .  $.  %@%1@♥@@@$t@@@ ▓ t$ ☺.......               
+                          .$%t@%@@tt@@@%      ,@.   @@☻t:@$@@t$@@.▒ l:█ ...  ..                
+                        .@@t$@@☺tt@@         ♥█     $@$I@@@ >@@@. W    ....  ..                
+                        %░@@$..t@ .         ☻1.    ,@,$1▒@@@$@@.  % ♣ 1%. ....                 
+                       ▓<$$: ,t.           @~      >.. t@@$@@▓.   ☻ .  ▓                       
+                       ▒$%.  t.            @.      .1..t@@@,,      @@@>!1I+.                   
+                       %░.. +t            +,.     >..  >t@@...       ♣,@|1%~                   
+                      ,☻.    |   t.  ▓█$  % .    % .$%$ t█ .          . ..▓%;                  
+                       .     .t11   .W.l   ☺  .☺|  ,%..@ t        t=t       I                  
+                                     W░    ▒l@.        @  |M .       t                         
+                                        ..  .@       .%     ☺t#.. .#t.                         
+                                                ♣@@@*.                                         
+                                                                                               
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
