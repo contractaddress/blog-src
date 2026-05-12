@@ -1,0 +1,111 @@
+---
+title: 'encrypt veracrypt containers with a yubikey'
+date: 2026-05-09
+excerpt: 'Guide on how to create veracrypt containers that require a yubikey & password to unlock'
+coverImage: 'blog-thumbs/verayubi-blog.png'
+draft: false
+---
+
+![blog thumb](/blog-thumbs/verayubi-blog.png)
+
+required packages:
+
+```bash
+sudo pacman -S yubikey-personalization yubikey-manager veracrypt
+```
+
+program slot 2 with challenge response:
+```bash
+ykman otp chalresp --touch 2
+```
+(backup the secret, if you ever lose your yubikey you can reprogram slot2)
+
+
+derive temporary keyfile from the yubikey to RAM: (touch when it blinks)
+```bash
+ykchalresp -2 "my-veracrypt-challenge" > /dev/shm/vc-keyfile
+```
+
+create the container
+```bash
+veracrypt --text --create ~/tutorial_container \
+  --size=3G \
+  --keyfiles="/dev/shm/vc-keyfile" \
+  --encryption=AES \
+  --hash=SHA-512 \
+  --filesystem=ext4 \
+  --volume-type=normal \
+  --random-source=/dev/urandom
+```
+Add a password! the yubikey should be 2FA not a passkey.
+
+shred the file after making the container
+```bash
+shred -u /dev/shm/vc-keyfile
+```
+
+### Create the mount/unmount script:
+
+```bash
+nvim ~/verayubi_mount.sh && chmod +x ~/verayubi_mount.sh
+```
+
+```bash
+#!/bin/bash
+set -e
+
+CHALLENGE="my-veracrypt-challenge"
+CONTAINER="$HOME/tutorial_container" #change to appropriate container name
+MOUNTPOINT="/mnt/private"
+KEYFILE=$(mktemp -p /dev/shm)
+
+echo "Touch your YubiKey..."
+
+# Derive keyfile from YubiKey (requires physical touch)
+ykchalresp -2 "$CHALLENGE" > "$KEYFILE"
+
+# Mount — will prompt for passphrase
+veracrypt --text --keyfiles="$KEYFILE" --protect-hidden=no "$CONTAINER" "$MOUNTPOINT"
+
+# Wipe keyfile from RAM immediately
+shred -u "$KEYFILE"
+
+echo "Mounted at $MOUNTPOINT"
+```
+
+unmount script:
+```bash
+nvim ~/umount_verayubi.sh && chmod +x ~/umount_verayubi.sh
+```
+
+```bash
+#!/bin/bash
+veracrypt --text -d /mnt/private
+echo "Unmounted !"
+```
+
+## Done!
+
+now test: 
+```bash
+❯ ./verayubi_mount.sh 
+Touch your YubiKey...
+Enter password for /home/pingu/tutorial_container: 
+Enter PIM for /home/pingu/tutorial_container: 
+Mounted at /mnt/private
+
+~ [⏱ 11s]
+❯ ls /mnt/private
+lost+found
+```
+
+
+
+hopefully this [[guide]]/[[tutorial]] was useful 
+
+<details open>
+  <summary style={{ color: 'var(--accent)' }}>Here is a full script to manage everything</summary>
+
+  ```bash
+  ```
+</details>

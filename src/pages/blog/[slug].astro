@@ -40,6 +40,7 @@ const { Content } = await render(post);
         <Content />
       </div>
     </article>
+    <script src="../../scripts/copy-code.js"></script>
   </body>
 </html>
 
@@ -89,6 +90,25 @@ const { Content } = await render(post);
     font-size: 0.8rem;
     color: var(--muted);
     font-family: var(--font);
+  }
+
+  pre {
+    position: relative;
+    }
+
+  .copy-btn {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    font-family: Mononoki Nerd Font Mono;
+    font-size: 15px;
+    background-color: var(--border);
+    border: none;
+    color: var(--accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
   }
 
   .post-body {
@@ -156,12 +176,9 @@ const { Content } = await render(post);
 
   .post-body pre {
     background: #111;
-    /* border-gradient experiment:
     border: 1px solid transparent;
-    border-image: linear-gradient(270deg, #DAC592FF, #D7992187) 1;
-    */
-    border: 1px solid #222;
-    padding: 0.75rem 1rem;
+    border-image: linear-gradient(270deg, #C4A468FF, #c8a96e) 1;
+    padding: 0.95rem 1rem;
     overflow-x: auto;
     margin: 1.25rem 0;
     font-family: var(--font);
@@ -203,5 +220,6 @@ const { Content } = await render(post);
     .post-title {
       font-size: 1.35rem;
     }
+
   }
 </style>

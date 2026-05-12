@@ -7,6 +7,16 @@ export default defineConfig({
   markdown: {
     shikiConfig: {
       theme: gruvbox,
+      transformers: [
+        {
+          pre(node) {
+            node.properties.style = node.properties.style.replace(
+              /background-color:[^;]+;/,
+              'background-color: #111;'
+            );
+          },
+        },
+      ],
     },
   },
 });
