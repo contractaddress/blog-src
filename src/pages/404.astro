@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import fs from 'node:fs';
 
-const birdArt = fs.readFileSync('public/bird.txt', 'utf-8');
+const asciiArt = fs.readFileSync('public/fenghuang.txt', 'utf-8');
 ---
 
 <html lang="en">
@@ -16,7 +16,7 @@ const birdArt = fs.readFileSync('public/bird.txt', 'utf-8');
   </head>
   <body>
     <main class="not-found">
-      <pre class="ascii">{birdArt}</pre>
+      <pre class="ascii">{asciiArt}</pre>
       <p class="message">
         Page not found head back <a href="/" class="link">home</a>
       </p>
