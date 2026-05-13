@@ -2,11 +2,11 @@
 title: 'encrypt veracrypt containers with a yubikey'
 date: 2026-05-09
 excerpt: 'Guide on how to create veracrypt containers that require a yubikey & password to unlock'
-coverImage: 'blog-thumbs/verayubi-blog.png'
+coverImage: '/blog/verayubi-blog.png'
 draft: false
 ---
 
-![blog thumb](/blog-thumbs/verayubi-blog.png)
+![blog thumb](/blog/verayubi-blog.png)
 Hey! welcome to my first blog post, today i'll walk you through using a yubikey with veracrypt to add an extra layer of security to your containers
 
 ## How it works
@@ -17,7 +17,7 @@ the yubi slot takes up to 64bytes of hex (challenge) as input -> runs `HMAC-SHA1
 this becomes the `keyfile` for the container, **so it must always be derived from the same challenge and private key**. They are both just as important, but the challenge does not need to be kept secret.
 
 We use the keyfile to create/mount containers and immediately delete it after the operations. So naturally the easiest way to manage all this, is with a script.
-![graph](/blog_img/verayubi-graph.png)
+![graph](/blog/verayubi-graph.png)
 
 ---
 ## required packages:
