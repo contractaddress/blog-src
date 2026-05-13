@@ -3,7 +3,7 @@
 ## stack
 - astro (framework)
 - bun
-- html/css 
+- html/css little to no js
 
 ```
                                                                             ♥M<<*☺             
