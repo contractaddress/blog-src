@@ -12,18 +12,18 @@ Hey! welcome to my first blog post, today i'll walk you through using a yubikey 
 ## How it works
 We program the yubikey slot2 with the `ykman` CLI tool to use the challenge-response method and store a 20byte key.
 
-the yubi slot will take a string (challenge) as input -> run `HMAC-SHA1` with the challenge & key -> returns a response we place in a tempory file in ram `(/dev/shm/)`
+the yubi slot takes up to 64bytes of hex (challenge) as input -> runs `HMAC-SHA1` with the challenge & key -> returns a response we place in a tempory file in ram `(/dev/shm/)`
 
-this becomes the keyfile for the container, so it must always be derived from the same challenge and private key. We use the keyfile to create/mount containers and immediately delete it after the operation is done. 
+this becomes the `keyfile` for the container, **so it must always be derived from the same challenge and private key**. They are both just as important, but the challenge does not need to be kept secret.
 
-so naturally the easiest way to manage all this, is with a script.
+We use the keyfile to create/mount containers and immediately delete it after the operations. So naturally the easiest way to manage all this, is with a script.
 ![graph](/blog_img/verayubi-graph.png)
 
 ---
 ## required packages:
 
 ```bash
-sudo pacman -S yubikey-personalization yubikey-manager veracrypt
+sudo pacman -S yubikey-manager veracrypt
 ```
 #
 ## program slot 2 with challenge response:
@@ -33,7 +33,7 @@ ykman otp chalresp --touch 2
 ```
 <p class='small-text' style={{color: 'var(--muted)'}}>(backup the private key, if you ever lose your yubikey you can reprogram slot2 with it)</p>
 
-Now your slot is ready for use! you can grab my script from [github](https://github.com/contractaddress/verayubi) or at [the very end of the page](#yubi-vera-script), or follow the next steps for a manual setup.
+Now your slot is ready for use! you can grab my script from [github](https://github.com/contractaddress/verayubi) or at [the very end of the page](#yubi-vera-script), or simply follow the next steps for a manual setup.
 
 <h1 style={{
     textDecoration: 'underline dashed',
@@ -41,8 +41,9 @@ Now your slot is ready for use! you can grab my script from [github](https://git
     color: 'var(--accent)'
 }}>Manual Setup</h1>
 derive temporary keyfile from the yubikey to ram: (touch when it blinks)
+> NOTE: you you can generate a hex challenge with `openssl rand -hex 15`
 ```bash
-ykchalresp -2 "my-veracrypt-challenge" > /dev/shm/vc-keyfile
+ykman otp calculate 2 "YOUR-HEX-CHALLENGE" > /dev/shm/vc-keyfile
 ```
 
 ## create the container
@@ -73,7 +74,7 @@ shred -u /dev/shm/vc-keyfile
 #!/bin/bash
 set -e
 
-CHALLENGE="my-veracrypt-challenge"
+CHALLENGE="567660ce4b09fa901282e309b46b07"
 CONTAINER="$HOME/tutorial_container" #change to appropriate container name/location
 MOUNTPOINT="/run/media/$USER/priv"
 KEYFILE=$(mktemp -p /dev/shm)
@@ -81,10 +82,10 @@ KEYFILE=$(mktemp -p /dev/shm)
 echo "Touch your YubiKey..."
 
 #Derive keyfile from YubiKey (requires physical touch)
-ykchalresp -2 "$CHALLENGE" > "$KEYFILE"
+ykman otp calculate 2 "$CHALLENGE" > "$KEYFILE"
 
 #Mount — will prompt for passphrase
-veracrypt --text --keyfiles="$KEYFILE" --protect-hidden=no "$CONTAINER" "$MOUNTPOINT"
+veracrypt --text --keyfiles="$KEYFILE" --protect-hidden=no "$CONTAINER" "$MOUNTPOINT" 
 
 #Wipe keyfile from RAM immediately
 shred -u "$KEYFILE"
@@ -130,15 +131,17 @@ Unmounted !
   fontSize: '22px'
 }}>Here is a script to create/mount/unmount yubi+vera containers</summary>
 
-<p style={{fontSize: '14px'}}>script does not program slot2 with the chalresp token, you need to provide it yourself</p>
+<p style={{fontSize: '14px'}}>script does not program yubikey slot2 with chalresp, see steps above.</p>
+<p style={{fontSize: '14px'}}>you also need to provide the challenge, you can use `openssl rand -hex 15` hardcoding it is fine</p> 
 ```bash
 #!/bin/bash
 set -e
 
-# Config
-CHALLENGE="my-veracrypt-challenge"
+########## CONFIG ##############
+CHALLENGE=  #put it in quotes
 MOUNTPOINT="/run/media/$USER/priv"
 CONT_DIR=$HOME/.local/share/verayubi
+########## CONFIG ##############
 
 if [ ! -d "$CONT_DIR" ]; then
     mkdir -p $CONT_DIR
@@ -148,21 +151,22 @@ create() {
     read -p "Container Name: " CONT_NAME 
     read -p "Size (format: 2K, 2M, 2G): " CONT_SIZE 
 
-    echo "Touch your Yubikey..."
+    KEYFILE=$(mktemp -p /dev/shm)
+    trap 'shred -u "$KEYFILE" 2>/dev/null' EXIT #cleanup keyfile if script fails 
+    
+    #derive temp keyfile
+    ykman otp calculate 2 "$CHALLENGE" > "$KEYFILE"
 
-    # Derive keyfile from YubiKey 
-    ykchalresp -2 "$CHALLENGE" > /dev/shm/vc-keyfile
-
-    veracrypt --text --create $CONT_DIR/$CONT_NAME \
-      --size=$CONT_SIZE \
-      --keyfiles="/dev/shm/vc-keyfile" \
+    veracrypt --text --create "$CONT_DIR/$CONT_NAME" \
+      --size="$CONT_SIZE" \
+      --keyfiles="$KEYFILE" \
       --encryption=AES-Twofish \
       --hash=SHA-512 \
       --filesystem=ext4 \
       --volume-type=normal \
       --random-source=/dev/urandom
 
-    trap 'shred -u /dev/shm/vc-keyfile 2>/dev/null' EXIT
+    echo "container created @ $CONT_DIR/$CONT_NAME"
 }
 
 mount_vol() {
@@ -172,19 +176,16 @@ mount_vol() {
 
     MOUNTPOINT="/run/media/$USER/priv"
     KEYFILE=$(mktemp -p /dev/shm)
+    trap 'shred -u "$KEYFILE" 2>/dev/null' EXIT #cleanup keyfile if script fails 
 
     if [ ! -d "$MOUNTPOINT" ]; then
         sudo mkdir -p "$MOUNTPOINT"
     fi
 
-    echo "Touch your YubiKey..."
-
     # Derive keyfile from YubiKey
-    ykchalresp -2 "$CHALLENGE" > "$KEYFILE"
+    ykman otp calculate 2 "$CHALLENGE" > "$KEYFILE"
 
     veracrypt --text --keyfiles="$KEYFILE" --protect-hidden=no "$CONTAINER" "$MOUNTPOINT"
-
-    trap 'shred -u "$KEYFILE" 2>/dev/null' EXIT
 
     echo "Mounted at $MOUNTPOINT"
     #nautilus -w $MOUNTPOINT or whatever file manager u use
