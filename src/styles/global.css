@@ -1,3 +1,5 @@
+@import '@fontsource/mononoki';
+
 :root {
   --bg: #0a0a0a;
   --surface: #111111;
@@ -5,7 +7,7 @@
   --text: #e8e8e8;
   --muted: #555555;
   --accent: #c8a96e;
-  --font: 'Mononoki Nerd Font', monospace;
+  --font: 'Mononoki', monospace;
 }
 
 .small-text {

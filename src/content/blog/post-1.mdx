@@ -14,10 +14,9 @@ We program the yubikey slot2 with the `ykman` CLI tool to use the challenge-resp
 
 the yubi slot will take a string (challenge) as input -> run `HMAC-SHA1` with the challenge & key -> returns a response we place in a tempory file in ram `(/dev/shm/)`
 
-this becomes the keyfile for the container, so the challenge must always be the same (and does not need to be kept secret). We use it to create/mount containers and delete the file afterwards
+this becomes the keyfile for the container, so it must always be derived from the same challenge and private key. We use the keyfile to create/mount containers and immediately delete it after the operation is done. 
 
 so naturally the easiest way to manage all this, is with a script.
-
 ![graph](/blog_img/verayubi-graph.png)
 
 ---
@@ -34,10 +33,11 @@ ykman otp chalresp --touch 2
 ```
 <p class='small-text' style={{color: 'var(--muted)'}}>(backup the private key, if you ever lose your yubikey you can reprogram slot2 with it)</p>
 
-Now your slot is ready for use! you can grab my script at the very end of the page or follow the next steps for a manual setup
+Now your slot is ready for use! you can grab my script from [github](https://github.com/contractaddress/verayubi) or at [the very end of the page](#yubi-vera-script), or follow the next steps for a manual setup.
 
 <h1 style={{
     textDecoration: 'underline dashed',
+    textUnderlineOffset: '6px',
     color: 'var(--accent)'
 }}>Manual Setup</h1>
 derive temporary keyfile from the yubikey to ram: (touch when it blinks)
@@ -57,6 +57,7 @@ veracrypt --text --create ~/tutorial_container \
   --volume-type=normal \
   --random-source=/dev/urandom
 ```
+
 Add a password! the yubikey should be 2FA not a passkey.
 
 shred the file after making the container
@@ -120,12 +121,13 @@ Unmounted !
 ```
 ---
 
-<details>
+<details id='yubi-vera-script'>
 <summary style={{ 
   color: 'var(--accent)', 
   textDecoration: 'underline dashed',
   textUnderlineOffset: '6px',
-  marginBottom: '10px'
+  marginBottom: '10px',
+  fontSize: '22px'
 }}>Here is a script to create/mount/unmount yubi+vera containers</summary>
 
 <p style={{fontSize: '14px'}}>script does not program slot2 with the chalresp token, you need to provide it yourself</p>
