@@ -138,7 +138,8 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
     flex: 0 0 65%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    margin-top: 30px;
   }
 
   .card-title {
@@ -173,6 +174,8 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
     font-size: 0.7rem;
     color: var(--muted);
     font-family: var(--font);
+    margin-top: auto;
+
   }
 
   .card-date.dimmed {
@@ -207,32 +210,49 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
     opacity: 0.5;
   }
 
-  @media (max-width: 768px) {
-    .blog-layout {
-      padding: 2rem 1.25rem;
-    }
 
-    .post-card {
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .card-content {
-      flex: 1 1 auto;
-      order: 2;
-    }
-
-    .card-image {
-      flex: 0 0 auto;
-      width: 100%;
-      min-height: 180px;
-      order: 1;
-    }
-
-    @media (max-width: 480px) {
-      .bottom-text {
-        font-size: 10px;
-      }
-
+/* for phones  */
+@media (max-width: 480px) {
+  .blog-layout {
+    padding: 2rem 1.25rem;
   }
+  a.post-card {
+    max-height: none;
+    padding-bottom: 1.2rem;
+  }
+  .post-card {
+    flex-direction: row;
+    gap: 0.75rem;
+    max-height: 120px;
+  }
+  .card-content {
+    flex: 1 1 auto;
+    order: 1;
+    display: flex;
+    margin-top: 10px;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .card-image {
+    flex: 0 0 40%;
+    width: 40%;
+    min-height: unset;
+    order: 2;
+  }
+  .card-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+  .card-excerpt {
+    font-size: 0.55rem;
+    margin-bottom: 0.25rem;
+  }
+  .card-date {
+    font-size: 0.65rem;
+    margin-top: auto;
+  }
+  .bottom-text {
+    font-size: 10px;
+  }
+}
 </style>
