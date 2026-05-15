@@ -10,10 +10,6 @@
   --font: 'Mononoki', monospace;
 }
 
-.small-text {
-  font-size: 0.85rem;
-  color: var(--text);
-}
 
 *,
 *::before,

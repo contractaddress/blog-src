@@ -98,6 +98,7 @@ const { Content } = await render(post);
     position: relative;
     }
 
+  /*
   .copy-btn {
     position: absolute;
     top: 50%;
@@ -111,7 +112,7 @@ const { Content } = await render(post);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     cursor: pointer;
-  }
+  } */
 
   .post-body {
     font-size: 1rem;
@@ -214,6 +215,11 @@ const { Content } = await render(post);
     color: var(--text);
   }
 
+  .small-text {
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+
   @media (max-width: 768px) {
     .post-layout {
       padding: 2rem 1.25rem 4rem;
@@ -222,6 +228,5 @@ const { Content } = await render(post);
     .post-title {
       font-size: 1.35rem;
     }
-
   }
 </style>
