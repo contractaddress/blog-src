@@ -54,9 +54,11 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
               </time>
               <span class="soon-badge">COMING SOON</span>
             </div>
-            <div class="card-image placeholder">
-              <img src="/cover-placeholder.svg" alt="" aria-hidden="true" />
-            </div>
+            {post.data.coverImage && (
+              <div class="card-image-comming-soon">
+                <img src={post.data.coverImage} alt="" aria-hidden="true" />
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -206,8 +208,8 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
     object-fit: cover;
   }
 
-  .card-image.placeholder img {
-    opacity: 0.5;
+  .card-image-comming-soon img {
+    filter: grayscale(1) brightness(0.35);
   }
 
 
