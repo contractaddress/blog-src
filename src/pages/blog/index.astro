@@ -61,6 +61,9 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
         ))}
       </div>
     </div>
+    <div class='bottom-text-div'>
+      <p class='bottom-text'>site and posts written by a human</p>
+    </div>
   </body>
 </html>
 
@@ -74,6 +77,19 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
   .posts {
     display: flex;
     flex-direction: column;
+  }
+
+  .bottom-text {
+    position: absolute;
+    bottom: 1.5rem;
+    font-size: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--muted);
+  }
+
+  .bottom-text:hover {
+    color: var(--accent);
   }
 
   .post-card {
@@ -212,5 +228,11 @@ const drafts = allPosts.filter(p => p.data.draft).sort((a, b) => b.data.date.val
       min-height: 180px;
       order: 1;
     }
+
+    @media (max-width: 480px) {
+      .bottom-text {
+        font-size: 10px;
+      }
+
   }
 </style>

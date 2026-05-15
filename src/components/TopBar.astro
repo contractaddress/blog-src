@@ -1,20 +1,31 @@
 <!-- src/components/TopBar.astro -->
 ---
+import { readFileSync } from 'node:fs';
+const githubSvg = readFileSync('public/github.svg', 'utf-8');
+const githubIcon = githubSvg.replace('width="25" height="25"', 'width="20" height="20"');
 ---
 <nav class="topbar">
-  <a href="/">Home</a>
-  <a href="/blog">Blog</a>
-  <a href="/about">About</a>
+  <a href="https://github.com/contractaddress/blog-src" class="github-icon" aria-label="GitHub" set:html={githubIcon}></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/blog">Blog</a>
+    <a href="/about">About</a>
+  </div>
 </nav>
 
 <style is:global>
   .topbar {
     display: flex;
-    justify-content: flex-end;
-    gap: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
     padding: 0.7rem 2rem;
     border-bottom: 1px solid #222;
     background-color: #0D0D0DFF;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
   }
 
   .topbar a {
@@ -28,5 +39,11 @@
 
   .topbar a:hover {
     color: var(--accent);
+  }
+
+  .github-icon {
+    display: flex;
+    align-items: center;
+    line-height: 0;
   }
 </style>
