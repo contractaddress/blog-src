@@ -30,5 +30,8 @@ pnpm-debug.log*
 .idea/
 
 .bak
+<<<<<<< HEAD
 
+=======
+>>>>>>> d92fc36 (new internal dir created and ignored)
 internal/
