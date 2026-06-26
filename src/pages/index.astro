@@ -94,23 +94,6 @@ const githubIcon = fs.readFileSync('public/github.svg', 'utf-8');
     color: #e8e8e8;
   }
 
-  @media (max-width: 480px) {
-    .ascii {
-      font-size: clamp(0.53em, 2.5vw, 0.35rem);
-    }
-    .cta {
-      margin-top: 40px;
-    }
-
-    .github-link {
-      bottom: 3.5rem;
-    }
-  }
-
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-
   @media (max-width: 1720px) {
     .ascii {
       font-size: clamp(0.59rem, 2.5vw, 0.50rem);
@@ -121,6 +104,26 @@ const githubIcon = fs.readFileSync('public/github.svg', 'utf-8');
 
     .github-link {
       bottom: 0.5rem;
+    }
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @media (max-width: 480px) {
+    .welcome {
+      font-size: 0.70rem
+    }
+    .ascii {
+      font-size: clamp(0.53em, 2.5vw, 0.35rem);
+      margin-top: 25px;
+    }
+    .cta {
+      margin-top: 20px;
+    }
+
+    .github-link {
+      bottom: 3.5rem;
     }
   }
 
