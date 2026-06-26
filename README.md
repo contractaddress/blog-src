@@ -2,7 +2,7 @@
 
 ## stack
 - astro (framework)
-- bun
+- deno 
 - html/css little to no js
 
 ![landing page logo](public/readme-ascii.svg)
