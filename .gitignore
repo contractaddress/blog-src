@@ -1,5 +1,11 @@
 # build output
 dist/
+
+# bun lockfile (migrated to deno)
+bun.lock
+
+# deno module cache
+.node/
 # generated types
 .astro/
 
