@@ -3,5 +3,6 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview"
-  }
+  },
+  "allowScripts": ["npm:sharp"]
 }
