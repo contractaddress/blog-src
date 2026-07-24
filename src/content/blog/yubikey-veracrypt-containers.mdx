@@ -6,18 +6,30 @@ coverImage: './images/verayubi-blog.png'
 draft: false
 ---
 
+<<<<<<< HEAD:src/content/blog/yubikey-veracrypt-containers.mdx
 ![blog thumb](./images/verayubi-blog.png)
 Hey! welcome to my first blog post, today i'll walk you through using a yubikey with veracrypt to add an extra layer of security to your containers
+=======
+![blog thumb](/blog/verayubi-blog.png)
+Hey! welcome to my first blog post, today i'll walk you through using a yubikey with veracrypt to add an extra layer of security to your encrypted containers
+>>>>>>> 9ed9369 (rewriting some parts, WIP):src/content/blog/post-1.mdx
 
 ## How it works
-We program the yubikey slot2 with the `ykman` CLI tool to use the challenge-response method and store a 20byte key.
+The **Yubikey** actually has two reprogrammable slots, that users can set up with various different methods depending on their needs.
 
-the yubi slot takes up to 64bytes of hex (challenge) as input -> runs `HMAC-SHA1` with the challenge & key -> returns a response we place in a tempory file in ram `(/dev/shm/)`
+We will be programming slot2 with the `ykman` CLI tool to use the **challenge-response** method & store a 20byte key on the yubi.
 
-this becomes the `keyfile` for the container, **so it must always be derived from the same challenge and private key**. They are both just as important, but the challenge does not need to be kept secret.
+after being programmed, the yubi slot takes up to 64bytes of hex (challenge) as input -> runs `HMAC-SHA1` with the challenge & key -> returns a response we place in a tempory file in ram `(/dev/shm/)` -> this becomes the `keyfile` for the container
 
+<<<<<<< HEAD:src/content/blog/yubikey-veracrypt-containers.mdx
 We use the keyfile to create/mount containers and immediately delete it after the operations. So naturally the easiest way to manage all this, is with a script.
 ![graph](./images/verayubi-graph.png)
+=======
+**the keyfile must always be derived from the same challenge and private key**. They are both just as important, but the challenge does not need to be kept secret.
+
+A **shell script** ties all of this together, so the keyfile only exists when needed.
+![graph](/blog/verayubi-graph.png)
+>>>>>>> 9ed9369 (rewriting some parts, WIP):src/content/blog/post-1.mdx
 
 ---
 ## required packages:
@@ -33,7 +45,7 @@ ykman otp chalresp --touch 2
 ```
 <p class='small-text' style={{color: 'var(--muted)'}}>(backup the private key, if you ever lose your yubikey you can reprogram slot2 with it)</p>
 
-Now your slot is ready for use! you can grab my script from [github](https://github.com/contractaddress/verayubi) or at [the very end of the page](#yubi-vera-script), or simply follow the next steps for a manual setup.
+Now your slot is ready for use! you can grab [my script from github](https://github.com/contractaddress/verayubi) or at [the very end of the page](#yubi-vera-script), or simply follow the next steps for a manual setup.
 
 ---
 
