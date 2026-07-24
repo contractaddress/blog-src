@@ -2,11 +2,11 @@
 title: 'encrypt veracrypt containers with a yubikey'
 date: 2026-05-09
 excerpt: 'Guide on how to create veracrypt containers that require a yubikey & password to unlock'
-coverImage: '/blog/verayubi-blog.png'
+coverImage: './images/verayubi-blog.png'
 draft: false
 ---
 
-![blog thumb](/blog/verayubi-blog.png)
+![blog thumb](./images/verayubi-blog.png)
 Hey! welcome to my first blog post, today i'll walk you through using a yubikey with veracrypt to add an extra layer of security to your encrypted containers
 
 ## How it works
@@ -19,7 +19,7 @@ after being programmed, the yubi slot takes up to 64bytes of hex (challenge) as 
 **the keyfile must always be derived from the same challenge and private key**. They are both just as important, but the challenge does not need to be kept secret.
 
 A **shell script** ties all of this together, so the keyfile only exists when needed.
-![graph](/blog/verayubi-graph.png)
+![graph](./images/verayubi-graph.png)
 
 ---
 ## required packages:
