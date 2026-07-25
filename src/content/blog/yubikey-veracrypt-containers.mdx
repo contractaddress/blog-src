@@ -7,7 +7,7 @@ draft: false
 ---
 
 ![blog thumb](./images/verayubi-blog.png)
-Hey! welcome to my first blog post, today i'll walk you through using a yubikey with veracrypt to add an extra layer of security to your encrypted containers
+Hey! welcome to my first blog post, today i'll walk you through using a yubikey with veracrypt to add a hardware layer of security to your encrypted containers
 
 ## How it works
 The **Yubikey** actually has two reprogrammable slots, that users can set up with various different methods depending on their needs.
@@ -15,6 +15,17 @@ The **Yubikey** actually has two reprogrammable slots, that users can set up wit
 We will be programming slot2 with the `ykman` CLI tool to use the **challenge-response** method & store a 20byte key on the yubi.
 
 after being programmed, the yubi slot takes up to 64bytes of hex (challenge) as input -> runs `HMAC-SHA1` with the challenge & key -> returns a response we place in a tempory file in ram `(/dev/shm/)` -> this becomes the `keyfile` for the container
+
+<details id='what-is-a-keyfile'>
+<summary style={{ 
+  color: 'var(--muted)', 
+  textDecoration: 'underline dashed',
+  textUnderlineOffset: '5px',
+  marginBottom: '20px',
+  fontSize: '13px'
+}}>what is a keyfile? (click)</summary>
+<p style={{fontSize: '14px', color: 'var(--muted)'}}>A keyfile is an additional file used to encrypt your containers. It must always be the same file bit for bit or you will not be able to decrypt your container.</p>
+</details>
 
 **the keyfile must always be derived from the same challenge and private key**. They are both just as important, but the challenge does not need to be kept secret.
 
@@ -136,7 +147,7 @@ Unmounted !
 }}>Full Verayubi bash script</summary>
 
 <p style={{fontSize: '14px'}}>script does not program yubikey slot2 with chalresp, see steps above.</p>
-<p style={{fontSize: '14px'}}>you also need to provide the challenge, you can use `openssl rand -hex 15` hardcoding it is fine</p> 
+<p style={{fontSize: '14px'}}>you also need to provide the challenge, you can use `openssl rand -hex 15` to generate one. Hardcoding it is acceptable, but making it an env var is better practice.</p> 
 ```bash
 #!/bin/bash
 set -e
