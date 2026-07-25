@@ -50,11 +50,14 @@ Now your slot is ready for use! you can grab [my script from github](https://git
 
 ---
 
-<h1 style={{
-    textDecoration: 'underline dashed',
-    textUnderlineOffset: '6px',
-    color: 'var(--accent)'
-}}>Manual Setup</h1>
+<details id='manual-setup'>
+<summary style={{ 
+  color: 'var(--accent)', 
+  textDecoration: 'underline dashed',
+  textUnderlineOffset: '6px',
+  marginBottom: '10px',
+  fontSize: '27px'
+}}>Manual Setup</summary>
 derive temporary keyfile from the yubikey to ram: (touch when it blinks)
 > NOTE: you you can generate a hex challenge with `openssl rand -hex 15`
 ```bash
@@ -135,6 +138,7 @@ lost+found
 ❯ ./verayubi_unmount.sh 
 Unmounted !
 ```
+</details>
 ---
 
 <details id='yubi-vera-script'>
@@ -144,7 +148,7 @@ Unmounted !
   textUnderlineOffset: '6px',
   marginBottom: '10px',
   fontSize: '27px'
-}}>Full Verayubi bash script</summary>
+}}>Verayubi bash script</summary>
 
 <p style={{fontSize: '14px'}}>script does not program yubikey slot2 with chalresp, see steps above.</p>
 <p style={{fontSize: '14px'}}>you also need to provide the challenge, you can use `openssl rand -hex 15` to generate one. Hardcoding it is acceptable, but making it an env var is better practice.</p> 
